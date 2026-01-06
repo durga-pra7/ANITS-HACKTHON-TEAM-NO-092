@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment Result - CertifySecure</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .result-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--background);
+            padding: 2rem;
+        }
+
+        .result-card {
+            background: var(--surface);
+            padding: 3rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary) 0%, #E2E8F0 0%);
+            margin: 0 auto 2rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .score-circle::before {
+            content: '';
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            background: var(--surface);
+            border-radius: 50%;
+        }
+
+        .score-text {
+            position: relative;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border-radius: 99px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+        }
+
+        .status-passed {
+            background: #DCFCE7;
+            color: #166534;
+        }
+
+        .status-failed {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #f00;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="result-container">
+        <div class="result-card">
+            <h1 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Assessment Complete</h1>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;" id="courseName">Python Programming Fundamentals
+            </p>
+
+            <!-- Visual Score -->
+            <div class="score-circle" id="scoreCircle">
+                <span class="score-text" id="scoreValue">0%</span>
+            </div>
+
+            <!-- Status -->
+            <div id="statusBadge" class="status-badge status-failed">
+                Failed
+            </div>
+
+            <p style="margin-bottom: 2rem; color: var(--text-muted); padding: 0 1rem;" id="feedbackText">
+                You did not meet the minimum passing score of 60%. Please review the material and try again.
+            </p>
+
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <button id="certBtn" class="btn btn-primary btn-block" disabled onclick="generateCert()">
+                    <ion-icon name="ribbon-outline" style="margin-right: 0.5rem;"></ion-icon>
+                    Generate Certificate
+                </button>
+                <a href="dashboard.html" class="btn btn-secondary btn-block">Return to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const raw = localStorage.getItem('lastResult');
+            if (!raw) {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            const result = JSON.parse(raw);
+            document.getElementById('courseName').innerText = result.course;
+            document.getElementById('scoreValue').innerText = result.score + '%';
+
+            // Animate Circle
+            const circle = document.getElementById('scoreCircle');
+            const color = result.passed ? '#22C55E' : '#EF4444';
+            circle.style.background = `conic-gradient(${color} ${result.score * 3.6}deg, #E2E8F0 0deg)`;
+
+            // Update Badge Logic
+            const badge = document.getElementById('statusBadge');
+            const feedback = document.getElementById('feedbackText');
+            const certBtn = document.getElementById('certBtn');
+
+            if (result.passed) {
+                badge.className = 'status-badge status-passed';
+                badge.innerText = 'Passed';
+                feedback.innerText = 'Congratulations! You have successfully demonstrated your skills. Your certificate is ready.';
+
+                certBtn.disabled = false;
+                certBtn.classList.add('btn-primary');
+                // Trigger Confetti
+                fireConfetti();
+            } else {
+                badge.className = 'status-badge status-failed';
+                badge.innerText = 'Failed';
+                feedback.innerText = `You scored ${result.score}%. You need 60% to pass. Please restart the course.`;
+
+                certBtn.disabled = true;
+                certBtn.style.opacity = '0.5';
+                certBtn.style.cursor = 'not-allowed';
+            }
+        });
+
+        function generateCert() {
+            // Forward to certificate view/download
+            window.location.href = 'certificate.html';
+        }
+
+        function fireConfetti() {
+            // Simple CSS confetti
+            const colors = ['#4F46E5', '#22C55E', '#F59E0B', '#EC4899'];
+            for (let i = 0; i < 50; i++) {
+                const conf = document.createElement('div');
+                conf.className = 'confetti';
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                conf.style.background = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.top = '-10px';
+                document.body.appendChild(conf);
+            }
+        }
+    </script>
+</body>
+
+</html>

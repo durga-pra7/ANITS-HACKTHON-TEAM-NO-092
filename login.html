@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login - CertifySecure</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Specific tweaks for Login */
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: color 0.2s;
+        }
+
+        .password-toggle:hover {
+            color: var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <ion-icon name="shield-checkmark"></ion-icon>
+                <span>CertifySecure</span>
+            </a>
+            <div class="nav-links">
+                <span style="font-size: 0.9rem; color: var(--text-muted);">New here?</span>
+                <a href="register.html" class="btn btn-secondary" style="padding: 0.5rem 1rem;">Register</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1 class="auth-title">Welcome Back</h1>
+                <p class="auth-subtitle">Login to access your exams and certificates.</p>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div id="passwordLogin">
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label class="form-label" for="login_email">Email Address</label>
+                        <div class="input-wrapper">
+                            <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+                            <input type="email" id="login_email" class="form-input" placeholder="john@example.com"
+                                required>
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label class="form-label" for="login_password">Password</label>
+                        <div class="input-wrapper">
+                            <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+                            <input type="password" id="login_password" class="form-input" placeholder="••••••••"
+                                required>
+                            <!-- Password Visibility Toggle -->
+                            <ion-icon name="eye-outline" class="password-toggle"
+                                onclick="togglePasswordVisibility('login_password', this)"></ion-icon>
+                        </div>
+                        <div style="text-align: right; margin-top: 0.5rem;">
+                            <a href="#" style="font-size: 0.85rem; color: var(--primary);">Forgot Password?</a>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </div>
+            </form>
+
+            <p class="text-center mt-4 text-sm text-muted">
+                Institutional login? <a href="#" class="text-primary">Click here</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Face API for ML Recognition -->
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // If already logged in, skip to dashboard
+        document.addEventListener('DOMContentLoaded', checkAuthRedirect);
+    </script>
+</body>
+
+</html>

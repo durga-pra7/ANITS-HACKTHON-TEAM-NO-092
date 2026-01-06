@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration - CertifySecure</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Ionicons for Icons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- Navigation (Simplified) -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <ion-icon name="shield-checkmark"></ion-icon>
+                <span>CertifySecure</span>
+            </a>
+            <div class="nav-links">
+                <span style="font-size: 0.9rem; color: var(--text-muted);">Already have an account?</span>
+                <a href="login.html" class="btn btn-secondary" style="padding: 0.5rem 1rem;">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1 class="auth-title">Create Account</h1>
+                <p class="auth-subtitle">Join thousands of students earning trusted certificates.</p>
+            </div>
+
+            <form id="registerForm" onsubmit="handleDetailsSubmit(event)">
+                <div id="step1">
+                    <!-- Full Name -->
+                    <div class="form-group">
+                        <label class="form-label" for="fullname">Full Name</label>
+                        <div class="input-wrapper">
+                            <ion-icon name="person-outline" class="input-icon"></ion-icon>
+                            <input type="text" id="fullname" class="form-input" placeholder="e.g. John Doe" required>
+                        </div>
+                    </div>
+
+                    <!-- College Name -->
+                    <div class="form-group">
+                        <label class="form-label" for="college">College / Institution</label>
+                        <div class="input-wrapper">
+                            <ion-icon name="school-outline" class="input-icon"></ion-icon>
+                            <input type="text" id="college" class="form-input" placeholder="e.g. State University"
+                                required>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <div class="input-wrapper">
+                            <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+                            <input type="email" id="email" class="form-input" placeholder="john@example.com" required>
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <div class="input-wrapper">
+                            <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+                            <input type="password" id="password" class="form-input" placeholder="••••••••" required
+                                oninput="checkStrength(this.value)">
+                        </div>
+                        <div class="password-strength">
+                            <div id="strengthBar" class="strength-bar"></div>
+                        </div>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="form-group">
+                        <label class="form-label" for="confirm_password">Confirm Password</label>
+                        <div class="input-wrapper">
+                            <ion-icon name="checkmark-circle-outline" class="input-icon"></ion-icon>
+                            <input type="password" id="confirm_password" class="form-input" placeholder="••••••••"
+                                required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                </div>
+            </form>
+
+            <p class="text-center mt-4 text-sm text-muted">
+                By registering, you agree to our <a href="#" style="text-decoration: underline;">Terms of Integrity</a>.
+            </p>
+        </div>
+    </div>
+
+    <!-- Face API for ML Recognition -->
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // If already logged in, skip to dashboard
+        document.addEventListener('DOMContentLoaded', checkAuthRedirect);
+    </script>
+</body>
+
+</html>

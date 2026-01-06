@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment in Progress - CertifySecure</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Exam Specific Layout */
+        body {
+            overflow: hidden;
+            /* Prevent scrolling in exam mode */
+            user-select: none;
+            /* CSS select disable */
+        }
+
+        .exam-container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            height: 100vh;
+        }
+
+        .question-area {
+            padding: 3rem;
+            overflow-y: auto;
+            background: var(--background);
+        }
+
+        .sidebar {
+            background: var(--surface);
+            border-left: 1px solid var(--border);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Question Styles */
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .q-badge {
+            background: #EEF2FF;
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 99px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: 500;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--surface);
+        }
+
+        .option-item:hover {
+            border-color: var(--primary);
+            background: #F8FAFC;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary);
+            background: #EEF2FF;
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+
+        .option-radio {
+            margin-right: 1rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            accent-color: var(--primary);
+        }
+
+        /* Webcam & Timer */
+        .webcam-feed {
+            width: 100%;
+            height: 200px;
+            background: #000;
+            border-radius: var(--radius-md);
+            object-fit: cover;
+            position: relative;
+        }
+
+        .recording-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .recording-dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .timer-box {
+            text-align: center;
+            padding: 1rem;
+            background: #F1F5F9;
+            border-radius: var(--radius-md);
+            font-variant-numeric: tabular-nums;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* Question Palette */
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+        }
+
+        .palette-item {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #F1F5F9;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .palette-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .palette-item.answered {
+            background: #DCFCE7;
+            /* Green-100 */
+            color: #166534;
+            /* Green-800 */
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal-box {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body oncontextmenu="return false;">
+
+    <div class="exam-container">
+        <!-- Main Question Area -->
+        <main class="question-area">
+            <div class="question-header">
+                <span class="q-badge">Question <span id="currentQNum">1</span> of 10</span>
+                <span style="color: var(--text-muted); font-size: 0.9rem;">Section: Python Basics</span>
+            </div>
+
+            <div id="questionContainer">
+                <h2 class="question-text">Which of the following is the correct file extension for Python files?</h2>
+                <div class="options-list">
+                    <label class="option-item" onclick="selectOption(this)">
+                        <input type="radio" name="opt" class="option-radio">
+                        <span>.pty</span>
+                    </label>
+                    <label class="option-item" onclick="selectOption(this)">
+                        <input type="radio" name="opt" class="option-radio">
+                        <span>.pyt</span>
+                    </label>
+                    <label class="option-item" onclick="selectOption(this)">
+                        <input type="radio" name="opt" class="option-radio">
+                        <span>.py</span>
+                    </label>
+                    <label class="option-item" onclick="selectOption(this)">
+                        <input type="radio" name="opt" class="option-radio">
+                        <span>.python</span>
+                    </label>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem; display: flex; justify-content: space-between;">
+                <button class="btn btn-secondary" onclick="prevQuestion()" id="prevBtn" disabled>Previous</button>
+                <button class="btn btn-primary" onclick="nextQuestion()" id="nextBtn">Next Question</button>
+            </div>
+        </main>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- Webcam -->
+            <div>
+                <p style="font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted);">
+                    Proctoring Active</p>
+                <div style="position: relative;">
+                    <video id="webcam" class="webcam-feed" autoplay muted playsinline></video>
+                    <div class="recording-indicator">
+                        <div class="recording-dot"></div>
+                        REC
+                    </div>
+                </div>
+                <p
+                    style="font-size: 0.75rem; color: var(--success); margin-top: 0.5rem; display: flex; align-items: center; gap: 4px;">
+                    <ion-icon name="checkmark-circle"></ion-icon> Monitoring Environment
+                </p>
+            </div>
+
+            <!-- Timer -->
+            <div>
+                <p style="font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted);">Time
+                    Remaining</p>
+                <div class="timer-box" id="timer">45:00</div>
+            </div>
+
+            <!-- Palette -->
+            <div>
+                <p style="font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted);">
+                    Questions</p>
+                <div class="palette-grid" id="qPalette">
+                    <div class="palette-item active">1</div>
+                    <div class="palette-item">2</div>
+                    <div class="palette-item">3</div>
+                    <div class="palette-item">4</div>
+                    <div class="palette-item">5</div>
+                    <div class="palette-item">6</div>
+                    <div class="palette-item">7</div>
+                    <div class="palette-item">8</div>
+                    <div class="palette-item">9</div>
+                    <div class="palette-item">10</div>
+                </div>
+            </div>
+
+            <button class="btn btn-secondary"
+                style="margin-top: auto; border-color: var(--danger); color: var(--danger);"
+                onclick="confirmSubmit()">Submit Exam</button>
+        </aside>
+    </div>
+
+    <!-- Violation Modal -->
+    <div class="modal-overlay" id="violationModal">
+        <div class="modal-box">
+            <ion-icon name="alert-circle"
+                style="font-size: 4rem; color: var(--danger); margin-bottom: 1rem;"></ion-icon>
+            <h2 style="color: var(--danger); font-size: 1.5rem; font-weight: 800; margin-bottom: 1rem;">VIOLATION
+                DETECTED</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);" id="violationReason">
+                Tab switching detected. This is a severe violation of exam rules.
+            </p>
+            <p style="font-weight: 600; margin-bottom: 2rem;">
+                Your exam has been terminated. You must restart the course.
+            </p>
+            <button class="btn btn-primary btn-block" onclick="exitExam()">Return to Dashboard</button>
+        </div>
+    </div>
+
+    <!-- Camera Setup Modal (Grace Period) -->
+    <div class="modal-overlay" id="cameraSetupModal"
+        style="display: flex; background: rgba(255,255,255,0.95); z-index: 3000;">
+        <div class="modal-box" style="max-width: 600px; padding: 3rem;">
+            <ion-icon name="camera-outline"
+                style="font-size: 4rem; color: var(--primary); margin-bottom: 1rem;"></ion-icon>
+            <h2 style="font-size: 2rem; font-weight: 800; color: var(--text-main); margin-bottom: 1rem;">Camera Setup
+                Required</h2>
+            <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem;">
+                We need to verify your webcam before starting the secure assessment.<br>
+                Please click "Allow" when prompt appears.
+            </p>
+
+            <div style="background: #F1F5F9; border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 2rem;">
+                <p style="font-weight: 600; margin-bottom: 0.5rem;">Grace Period Active</p>
+                <div
+                    style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 2rem; font-weight: 800; color: var(--primary);">
+                    <ion-icon name="time-outline"></ion-icon>
+                    <span id="graceTimer">15</span>s
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;" id="aiStatus">Initializing
+                    AI Proctoring...</p>
+            </div>
+
+            <p style="font-size: 0.9rem; color: var(--text-muted);">
+                Secure Mode will activate <span style="font-weight: 700; color: var(--text-main);">only</span> after
+                successful verification.
+            </p>
+        </div>
+    </div>
+
+    <!-- AI Proctoring Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+
+    <!-- Load Mock Data Helper First -->
+    <script src="js/questions.js"></script>
+    <script src="js/exam.js"></script>
+</body>
+
+</html>

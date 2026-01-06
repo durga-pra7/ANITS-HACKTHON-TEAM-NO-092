@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Certificate - CertifySecure</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
+            --gold: #D97706;
+            /* Amber 600 */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F3F4F6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* Certificate Container (A4 Landscape aspect ratio approx) */
+        .cert-container {
+            width: 1000px;
+            height: 700px;
+            background: #FFF;
+            position: relative;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: 1px solid #E5E7EB;
+        }
+
+        /* Border Decoration */
+        .cert-border {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 2px solid var(--primary);
+            pointer-events: none;
+        }
+
+        .cert-inner-border {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            right: 25px;
+            bottom: 25px;
+            border: 1px solid var(--gold);
+            pointer-events: none;
+        }
+
+        /* Typography */
+        .cert-header {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .cert-subheader {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cert-body {
+            margin-bottom: 3rem;
+            width: 80%;
+        }
+
+        .cert-text {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .student-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin: 1.5rem 0;
+            border-bottom: 2px solid #E5E7EB;
+            display: inline-block;
+            padding: 0 2rem 0.5rem 2rem;
+            min-width: 400px;
+        }
+
+        .course-title {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        /* Seal & Signatures */
+        .cert-footer {
+            width: 80%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 2rem;
+        }
+
+        .signature-block {
+            text-align: center;
+        }
+
+        .signature-line {
+            width: 200px;
+            height: 1px;
+            background: #9CA3AF;
+            margin-bottom: 0.5rem;
+        }
+
+        .seal {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, #FCD34D, #F59E0B, #FCD34D, #D97706, #FCD34D);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            color: #78350F;
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 1rem;
+            font-family: serif;
+            border: 4px solid #FFF;
+            outline: 2px solid #D97706;
+        }
+
+        .cert-id {
+            position: absolute;
+            bottom: 40px;
+            font-size: 0.75rem;
+            color: #9CA3AF;
+            font-family: monospace;
+        }
+
+        /* UI Buttons (Hidden in Print) */
+        .action-bar {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            background: white;
+            border: 1px solid #D1D5DB;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: #F9FAFB;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border-color: transparent;
+        }
+
+        .btn-primary:hover {
+            background: #4338CA;
+        }
+
+        /* Print Styles for PDF */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                justify-content: flex-start;
+            }
+
+            .cert-container {
+                box-shadow: none;
+                border: none;
+                width: 100%;
+                height: 100vh;
+                /* Fill page */
+            }
+
+            .action-bar,
+            .navbar {
+                display: none !important;
+            }
+
+            @page {
+                size: landscape;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cert-container" id="certificate">
+        <!-- Borders -->
+        <div class="cert-border"></div>
+        <div class="cert-inner-border"></div>
+
+        <!-- Header -->
+        <div style="margin-bottom: 1rem;">
+            <ion-icon name="shield-checkmark" style="font-size: 3rem; color: var(--primary);"></ion-icon>
+        </div>
+        <h1 class="cert-header">Certificate of Completion</h1>
+        <p class="cert-subheader">This is to certify that</p>
+
+        <!-- Name -->
+        <h2 class="student-name" id="studentName">Student Name</h2>
+
+        <!-- Body -->
+        <div class="cert-body">
+            <p class="cert-text">Has successfully completed the comprehensive assessment for</p>
+            <p class="course-title" id="courseName">Course Name</p>
+            <p class="cert-text" style="font-size: 1rem; margin-top: 1rem;">demonstrating proficiency and excellence in
+                the required skills.</p>
+        </div>
+
+        <!-- Footer -->
+        <div class="cert-footer">
+            <div class="signature-block">
+                <div class="signature-line"></div>
+                <p style="font-weight: 700;">ANITS COLLEGE</p>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Dean of Assessment</p>
+            </div>
+
+            <div class="seal">
+                OFFICIAL<br>VERIFIED<br>SEAL
+            </div>
+
+            <div class="signature-block">
+                <div class="signature-line"></div>
+                <p style="font-weight: 700;" id="dateText">Jan 01, 2026</p>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Date of Issue</p>
+            </div>
+        </div>
+
+        <div class="cert-id" id="certID">ID: NO-DATA-000</div>
+    </div>
+
+    <!-- Actions -->
+    <div class="action-bar">
+        <button class="btn" onclick="window.location.href='dashboard.html'">
+            <ion-icon name="arrow-back"></ion-icon> Dashboard
+        </button>
+        <button class="btn btn-primary" onclick="window.print()">
+            <ion-icon name="download-outline"></ion-icon> Download PDF
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Data Population
+            const userStr = localStorage.getItem('user');
+            const resultStr = localStorage.getItem('lastResult');
+
+            if (!userStr || !resultStr) {
+                // Determine graceful fallback or redirect
+                // For prototype demo, allows viewing with mock data if missing
+                console.log("No result data found. Showing placeholder.");
+                document.getElementById('studentName').innerText = "Gnaneswar Seepana";
+                document.getElementById('courseName').innerText = "Python Programming Fundamentals";
+                document.getElementById('certID').innerText = "ID: DEMO-PREVIEW-123";
+                return;
+            }
+
+            const user = JSON.parse(userStr);
+            const result = JSON.parse(resultStr);
+
+            // Verify pass
+            if (!result.passed) {
+                alert("Certificate not available. Exam not passed.");
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            document.getElementById('studentName').innerText = user.fullname || "Student Name";
+            document.getElementById('courseName').innerText = result.course || "Course Name";
+
+            const date = new Date();
+            document.getElementById('dateText').innerText = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+            // Generate UUID-like ID
+            const uid = 'CRT-' + Math.random().toString(36).substr(2, 9).toUpperCase() + '-' + date.getFullYear();
+            document.getElementById('certID').innerText = `ID: ${uid}`;
+        });
+    </script>
+</body>
+
+</html>

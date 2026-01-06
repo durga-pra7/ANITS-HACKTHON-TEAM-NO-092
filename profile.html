@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - CertifySecure</title>
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .profile-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+            color: white;
+            padding: 4rem 2rem 6rem;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--primary);
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-container {
+            max-width: 1000px;
+            margin: -4rem auto 4rem;
+            padding: 0 1.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .list-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .list-item {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-item:hover {
+            background: #F8FAFC;
+        }
+
+        .item-info h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .item-info p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .tag {
+            padding: 0.25rem 0.75rem;
+            border-radius: 99px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="dashboard.html" class="logo">
+                <ion-icon name="shield-checkmark"></ion-icon>
+                <span>CertifySecure</span>
+            </a>
+            <div class="nav-links">
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="#" class="nav-link" style="color: var(--primary); font-weight: 600;">Profile</a>
+                <button onclick="handleLogout()" class="btn btn-secondary"
+                    style="padding: 0.5rem 1rem; font-size: 0.85rem;">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <header class="profile-header">
+        <div class="profile-avatar" id="avatarInitials">S</div>
+        <h1 id="profileName" style="font-size: 2rem; font-weight: 700;">Student Name</h1>
+        <p id="profileEmail" style="opacity: 0.9; margin-top: 0.5rem;">student@example.com</p>
+        <p id="profileCollege" style="opacity: 0.8; font-size: 0.9rem; margin-top: 0.25rem;">University of Technology
+        </p>
+    </header>
+
+    <div class="profile-container">
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">2</div>
+                <div class="stat-label">Enrolled Courses</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="certCount">0</div>
+                <div class="stat-label">Certificates Earned</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">85%</div>
+                <div class="stat-label">Average Score</div>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="section-title"><ion-icon name="ribbon-outline"></ion-icon> My Achievements & Certificates</h3>
+            <div class="list-card" id="completedList">
+                <!-- Dynamically Populated -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                const user = JSON.parse(userStr);
+                document.getElementById('profileName').innerText = user.fullname;
+                document.getElementById('profileEmail').innerText = user.email;
+                document.getElementById('avatarInitials').innerText = user.fullname.charAt(0).toUpperCase();
+                document.getElementById('profileCollege').innerText = user.college || "Institute of Tech";
+            }
+
+            const certList = document.getElementById('completedList');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const userEmail = user.email || 'guest';
+            const storageKey = `certifications_${userEmail}`;
+
+            const certs = JSON.parse(localStorage.getItem(storageKey) || '[]');
+            document.getElementById('certCount').innerText = certs.length;
+
+            if (certs.length === 0) {
+                certList.innerHTML = `<div class="list-item" style="justify-content:center; color: var(--text-muted);">No certificates earned yet.</div>`;
+            } else {
+                certList.innerHTML = '';
+                certs.forEach((cert, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'list-item';
+                    div.innerHTML = `
+                        <div class="item-info">
+                            <h4 style="color: var(--primary);">${cert.course}</h4>
+                            <p>Completed: ${cert.date} • Score: ${cert.score}%</p>
+                            <p style="font-size: 0.75rem; color: #9CA3AF; margin-top:0.25rem;">ID: ${cert.certId}</p>
+                        </div>
+                        <div>
+                             <button class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;" onclick="viewCert(${index})">
+                                <ion-icon name="download-outline"></ion-icon> Certificate
+                             </button>
+                        </div>
+                    `;
+                    certList.appendChild(div);
+                });
+            }
+        });
+
+        function handleLogout() {
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+
+        function viewCert(index) {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const userEmail = user.email || 'guest';
+            const storageKey = `certifications_${userEmail}`;
+            const certs = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+            if (certs[index]) {
+                localStorage.setItem('lastResult', JSON.stringify(certs[index]));
+                window.location.href = 'certificate.html';
+            }
+        }
+    </script>
+</body>
+
+</html>

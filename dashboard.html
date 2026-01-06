@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - CertifySecure</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Small layout tweask for dashboard header */
+        .dash-header {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        @media(min-width: 768px) {
+            .dash-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-end;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <ion-icon name="shield-checkmark"></ion-icon>
+                <span>CertifySecure</span>
+            </a>
+            <div class="nav-links">
+                <a href="dashboard.html" class="nav-link" style="color: var(--primary); font-weight: 600;">Browse
+                    Courses</a>
+                <a href="profile.html" class="nav-link">My Certificates</a>
+                <div style="display: flex; gap: 1rem; align-items: center; margin-left: 1rem;">
+                    <a href="profile.html" id="userGreeting"
+                        style="font-weight: 500; text-decoration: none; color: inherit;">Hello, Student</a>
+                    <button onclick="handleLogout()" class="btn btn-secondary"
+                        style="padding: 0.5rem 1rem; font-size: 0.85rem;">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div style="max-width: 1200px; margin: 0 auto; padding: 8rem 2rem 4rem;">
+
+        <div class="dash-header">
+            <div>
+                <h1 style="font-size: 2rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem;">Explore
+                    Courses</h1>
+                <p style="color: var(--text-muted);">Advance your career with trusted certifications.</p>
+            </div>
+            <!-- Search Bar -->
+            <div class="search-container" style="margin-bottom: 0; min-width: 300px;">
+                <ion-icon name="search-outline" class="search-icon"></ion-icon>
+                <input type="text" class="search-input" placeholder="Search for skills, exams..."
+                    oninput="filterCourses(this.value)">
+            </div>
+        </div>
+
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem;">Available Assessments</h3>
+
+        <div class="features-grid" id="courseGrid">
+            <!-- Course 1 -->
+            <div class="feature-card course-card">
+                <div style="width: 100%;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span class="badge badge-beginner">Beginner</span>
+                        <ion-icon name="code-slash-outline"
+                            style="color: var(--primary); font-size: 1.5rem;"></ion-icon>
+                    </div>
+                    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Python Programming
+                        Fundamentals</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
+                        Master the basics of Python. Covers loops, functions, and data structures.
+                    </p>
+                </div>
+                <button class="btn btn-secondary btn-block" onclick="enroll(this)">Enroll Now</button>
+            </div>
+
+            <!-- Course 2 -->
+            <div class="feature-card course-card">
+                <div style="width: 100%;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span class="badge badge-intermediate">Intermediate</span>
+                        <ion-icon name="server-outline" style="color: var(--accent); font-size: 1.5rem;"></ion-icon>
+                    </div>
+                    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Database Management Systems
+                    </h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
+                        Learn SQL, normalization, and relational database design principles.
+                    </p>
+                </div>
+                <button class="btn btn-secondary btn-block" onclick="enroll(this)">Enroll Now</button>
+            </div>
+
+            <!-- Course 3 -->
+            <div class="feature-card course-card">
+                <div style="width: 100%;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span class="badge badge-advanced">Advanced</span>
+                        <ion-icon name="lock-closed-outline"
+                            style="color: var(--danger); font-size: 1.5rem;"></ion-icon>
+                    </div>
+                    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Cyber Security & Ethical
+                        Hacking</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
+                        Advanced penetration testing and network security protocols.
+                    </p>
+                </div>
+                <button class="btn btn-secondary btn-block" onclick="enroll(this)">Enroll Now</button>
+            </div>
+
+            <!-- Course 4 -->
+            <div class="feature-card course-card">
+                <div style="width: 100%;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span class="badge badge-beginner">Beginner</span>
+                        <ion-icon name="bar-chart-outline" style="color: var(--success); font-size: 1.5rem;"></ion-icon>
+                    </div>
+                    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Data Science 101</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
+                        Introduction to data analysis, visualization, and statistics.
+                    </p>
+                </div>
+                <button class="btn btn-secondary btn-block" onclick="enroll(this)">Enroll Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Check auth
+        const userStr = localStorage.getItem('user');
+        if (!userStr) {
+            window.location.href = 'login.html';
+        } else {
+            const user = JSON.parse(userStr);
+            // Ensure first name is used for a friendly greeting
+            const firstName = user.fullname ? user.fullname.split(' ')[0] : 'Student';
+            document.getElementById('userGreeting').innerText = `Hello, ${firstName}`;
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+
+        function enroll(btn) {
+            // For the prototype, let's link the first course to the exam start page.
+            // In a real app we'd pass the course ID.
+            window.location.href = 'exam_start.html';
+        }
+
+        function filterCourses(query) {
+            const grid = document.getElementById('courseGrid');
+            const cards = grid.getElementsByClassName('feature-card');
+            const lowerQuery = query.toLowerCase();
+
+            Array.from(cards).forEach(card => {
+                const title = card.querySelector('h3').innerText.toLowerCase();
+                const desc = card.querySelector('p').innerText.toLowerCase();
+                if (title.includes(lowerQuery) || desc.includes(lowerQuery)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
